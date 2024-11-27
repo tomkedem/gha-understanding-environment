@@ -6,13 +6,13 @@ on:
       - dev
 env: 
   MONGODB_DB_NAME: gha-demo
+  MONGODB_CLUSTER_ADDRESS: cluster0.15pwqcc.mongodb.net
+  PORT: 8080
 jobs:
   test:
-    env:
-      MONGODB_CLUSTER_ADDRESS: cluster0.15pwqcc.mongodb.net
+    env:      
       MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-      PORT: 8080
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}   
     environment: testing
     runs-on: ubuntu-latest
     steps:
@@ -29,9 +29,10 @@ jobs:
         run: npm start & npx wait-on http://127.0.0.1:$PORT
       - name: Run tests
         run: npm test
-      - name: Output information
+      - name: Output debugging information
         run: | 
-         echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+         echo "Running tests with DB: $MONGODB_DB_NAME"
+         echo "Cluster: $MONGODB_CLUSTER_ADDRESS"
   deploy:
     needs: test
     runs-on: ubuntu-latest
